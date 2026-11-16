@@ -1,0 +1,14 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "PassiveQuantumMemory.part1_thermally_and_perturbatively_stable_memory",
+    "PassiveQuantumMemory.part2_fixed_temp_perturbative_thermal_and_kms_stability"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": false
+}

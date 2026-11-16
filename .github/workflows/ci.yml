@@ -1,0 +1,44 @@
+# Copyright 2026 The Passive Quantum Memory Authors.
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+# https://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing permissions and limitations under
+# the License.
+
+name: Lean 4 Build & Comparator CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Build & Comparator Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install bubblewrap and enable unprivileged user namespaces for lake comparator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+
+      - name: Install elan and pinned Lean toolchain
+        run: |
+          curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+
+      - name: Build Defs, Proofs, Challenge, and Solution
+        run: lake build Defs Proofs Challenge Solution
+
+      - name: Run trust-minimized kernel comparator audit
+        run: lake comparator --config comparator.json

@@ -1,0 +1,127 @@
+# Copyright 2026 The Passive Quantum Memory Authors.
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+# https://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing permissions and limitations under
+# the License.
+#
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Passive Quantum Memory in Three Dimensions"
+  description: >-
+    Lean 4 (v4.35.0) formalization of a three-dimensional passive quantum memory on open 3D
+    cubic lattices (based on a three-layer variant of the Balasubramanian–Davydova–Lin multiscale
+    welded CSS hierarchy), certifying standalone existential challenge theorems for:
+    (1) simultaneous positive-temperature unperturbed Gibbs & KMS/CPTP-Davies thermal memory
+    stability (β > β_c) and zero-temperature superpolynomial perturbative & closed-system unitary
+    memory stability (Part I); and
+    (2) simultaneous positive-temperature fixed-window (β ∈ (β_c, β_max]) bare and logarithmic-cooling
+    (β ≥ C_scale log L) QAC-dressed Gibbs failure probability and KMS-symmetric dissipative memory
+    lifetime bounds under general finite-range perturbations of constant O(1) coupling strength
+    (Part II).
+  authors:
+    - "Patrick Hayden"
+  responsible_maintainers:
+    - "Patrick Hayden"
+  license: "Apache-2.0"
+
+classification:
+  arxiv:
+    - "quant-ph"
+    - "math-ph"
+    - "cond-mat.stat-mech"
+  msc2020:
+    - "81P73"
+    - "82B10"
+    - "82C10"
+    - "81V70"
+
+sources:
+  - title: "Passive Quantum Memory in Three Dimensions, Part I: Thermal and Zero-Temperature Perturbative Stability"
+    authors:
+      - "Patrick Hayden"
+    type: "article"
+    location: "Section 7.4, Theorem 7.5"
+    relationship: "formalizes"
+    author_endorsement: "participated"
+  - title: "Passive Quantum Memory in Three Dimensions, Part II: Robust Thermal Stability"
+    authors:
+      - "Patrick Hayden"
+    type: "article"
+    location: "Section 6.3, Theorems 6.3, 6.4, and 6.5"
+    relationship: "formalizes"
+    author_endorsement: "participated"
+  - title: "A passive self-correcting quantum memory in three dimensions"
+    authors:
+      - "Shankar Balasubramanian"
+      - "Margarita Davydova"
+      - "Ting-Chun Lin"
+    id: "https://arxiv.org/abs/2605.10943"
+    type: "article"
+    relationship: "adapts"
+    note: "Introduces the multiscale welded 3D CSS code architecture adapted to three layers here."
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "Gemini 4 Argon"
+        - "Gemini 4 Carbon"
+  notes: >-
+    Human–AI research collaboration: research direction, problem formulation, and overall proof
+    strategy were set by the author, while Gemini 4 Argon performed most of the detailed
+    mathematical reasoning, proof construction, and Lean 4 formalization, and both Argon and
+    Carbon assisted in drafting the companion manuscripts.
+
+status:
+  scope: >-
+    Certifies the two standalone existential spin-lattice challenge theorems in Challenge.lean
+    over six generic spin-system modules in Defs/ via lake comparator, plus the internal
+    superpolynomial-decay cryogenic synthesis theorem
+    LogCoolingPerturbativeSynthesis.log_cooling_perturbative_thermal_stability_main.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Quot.sound"
+    - "Classical.choice"
+  main_results:
+    - declaration: "PassiveQuantumMemory.part1_thermally_and_perturbatively_stable_memory"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Quot.sound"
+        - "Classical.choice"
+      comparator_config: "comparator.json"
+    - declaration: "PassiveQuantumMemory.part2_fixed_temp_perturbative_thermal_and_kms_stability"
+      file: "Solution.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Quot.sound"
+        - "Classical.choice"
+      comparator_config: "comparator.json"
+
+fidelity:
+  divergences: >-
+    The formalization is engineered to discharge the two standalone existential challenge theorems
+    in Challenge.lean rather than formalizing every intermediate lemma of the companion papers
+    verbatim. Code-specific cell-geometry constants and explicit export of Clause (II) (RCA/TQO)
+    are proved internally on the welded BDL witness rather than exported at the Challenge.lean
+    boundary; ground degeneracy is exported as ≥ 2, ground-space invariance as
+    ‖[H_k, P_{0,dress}]‖ ≤ δ_split(L_k), and Part II's Challenge theorem specializes the cryogenic
+    branch to finite-range perturbations (while the general D_super cryogenic theorem is proved in
+    LogCoolingPerturbativeSynthesis.lean). Scale-matched RCA is proved directly via concrete
+    coarse-projection cocycles rather than the general Homological Perturbation Lemma.
+
+review:
+  status: "author-verified"
+  notes: >-
+    Verified end-to-end by lake comparator (Lean v4.35.0 sandboxed leanexport and fresh kernel
+    replay via leanchecker) with independent multi-agent semantic auditing against the Part I and
+    Part II manuscripts.
